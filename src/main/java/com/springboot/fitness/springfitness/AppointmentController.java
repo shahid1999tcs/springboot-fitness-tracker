@@ -26,8 +26,7 @@ public class AppointmentController {
 	public void saveuser(@Valid @RequestBody Appointment appointment) {
 
 		if (appointment.getUsername() == null || appointment.getUsername().length() <= 5) {
-			System.out.println("Username should exist and be less than 5 characters");
-			throw new RuntimeException("What are you doing!!!!"); 
+			throw new UserNameInvalidException("UserName Cannot be null and should be more then 5 Characters"); 
 			//REST OF THE VALIDATION IS DONE THROUGH SPRING BECAUSE OF @VALID AND OTHER
 			//ANNOTATIONS IN THE APPOINTMENT.JAVA CLASS
 		}
@@ -38,8 +37,7 @@ public class AppointmentController {
 
 	@GetMapping("/app")
 	public Iterable<Appointment> getAppointments() {
-		Iterable<Appointment> apps = repo.findAll();
-		return apps;
+		return repo.findAll();
 	}
 	
 	@GetMapping("/app/{id}")
@@ -53,7 +51,11 @@ public class AppointmentController {
 	
 	@PutMapping("/app/{id}")
 	public void updateAppointment(@PathVariable("id") Integer id,@RequestBody Appointment app) {
-		Appointment appFromDb = repo.findById(id).get();
+		Optional<Appointment> appointment = repo.findById(id);
+		Appointment appFromDb = new Appointment();
+		if(appointment.isPresent()) {
+			appFromDb = appointment.get();
+		}
 		if(StringUtils.hasText(app.getTrainerName())) {
 			appFromDb.setTrainerName(app.getTrainerName());
 		}
@@ -66,8 +68,8 @@ public class AppointmentController {
 		repo.save(appFromDb);
 	}	
 
-	@ExceptionHandler(value = { RuntimeException.class })
-	public ResponseEntity<Appointment> exception(RuntimeException runtime) {
+	@ExceptionHandler(value = { UserNameInvalidException.class })
+	public ResponseEntity<Appointment> exception(UserNameInvalidException invalid) {
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 	

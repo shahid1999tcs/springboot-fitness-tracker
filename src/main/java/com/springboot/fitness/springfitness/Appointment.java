@@ -7,8 +7,6 @@ import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-import org.springframework.validation.annotation.Validated;
-
 @Entity
 public class Appointment {
 
