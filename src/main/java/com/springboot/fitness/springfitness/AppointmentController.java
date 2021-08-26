@@ -21,16 +21,20 @@ public class AppointmentController {
 
 	@Autowired
 	IAppointmentRepository repo;
+	
+	@Autowired
+	IUserRepository urepo;
 
-	@PostMapping("/app")
-	public void saveuser(@Valid @RequestBody Appointment appointment) {
+	@PostMapping("{id}/app")
+	public void saveuser(@Valid @RequestBody Appointment appointment,@PathVariable("id") Integer id ) {
 
 		if (appointment.getUsername() == null || appointment.getUsername().length() <= 5) {
 			throw new UserNameInvalidException("UserName Cannot be null and should be more then 5 Characters"); 
 			//REST OF THE VALIDATION IS DONE THROUGH SPRING BECAUSE OF @VALID AND OTHER
 			//ANNOTATIONS IN THE APPOINTMENT.JAVA CLASS
 		}
-
+		User user = urepo.findById(id).get();
+		appointment.setUser(user);
 		repo.save(appointment);
 
 	}
