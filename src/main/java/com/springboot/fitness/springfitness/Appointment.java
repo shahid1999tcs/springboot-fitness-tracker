@@ -29,12 +29,7 @@ public class Appointment {
 	@NotBlank(message = "package name cannot be blank")
 	private String packageName;
 	private int amount;
-	private String username;
-	@NotBlank(message = "Email cannot be blank")
-	@Email(message = "enter valid email")
-	private String userEmail;
 	@ManyToOne
 	@JsonIgnore
 	private User user;
-
 }

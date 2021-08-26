@@ -27,7 +27,7 @@ public class User {
 	private String lastName;
 	private int age;
 	private String address;
-	@OneToMany(cascade=CascadeType.ALL)
-    @JoinColumn(name="USER_ID")
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "USER_ID")
 	private Set<Appointment> appointments;
 }
